@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react';
+import { useState, ReactElement } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,10 +7,12 @@ import { IOrder } from '../types/order';
 
 import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 
+import { useUserStore } from '../store';
+
 export const Wallet = (): ReactElement => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentBalance, setCurrentBalance] = useState<number>(120);
+
+  const { balance } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -64,8 +66,7 @@ export const Wallet = (): ReactElement => {
         </div>
         <div className='flex justify-between items-center'>
           <span className='text-2xl font-bold'>
-            R${' '}
-            {showBalance ? `${numberToCurrencyFormat(currentBalance)}` : '****'}
+            R$ {showBalance ? `${numberToCurrencyFormat(balance)}` : '****'}
           </span>
           <button
             onClick={toggleBalanceVisibility}

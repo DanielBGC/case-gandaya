@@ -7,6 +7,7 @@ import {
 
 import { Wallet } from './pages/wallet';
 import { Menu } from './pages/menu';
+import { Checkout } from './pages/checkout';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path='/' element={<Navigate to='/wallet' />} />
         <Route path='/wallet' element={<Wallet />} />
         <Route path='/menu' element={<Menu />} />
-        <Route path='/checkout' element={<h1>Checkout</h1>} />
+        <Route path='/checkout' element={<Checkout />} />
       </Routes>
     </Router>
   );
