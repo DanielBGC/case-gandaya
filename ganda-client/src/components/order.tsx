@@ -7,7 +7,7 @@ import { IOrder } from '../types/order';
 
 export const Order = ({ id, name, value, date }: IOrder): ReactElement => {
   return (
-    <li key={id} className='mt-1 flex gap-2 items-center'>
+    <li key={id} className='mt-2 flex gap-2 items-center'>
       <div className='flex items-center justify-center border-2 border-[#E3E3E3] rounded-md aspect-square h-16'>
         <span className='font-extrabold text-2xl'>{id}</span>
       </div>

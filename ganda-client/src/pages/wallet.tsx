@@ -1,5 +1,6 @@
 import React, { useState, ReactElement } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 import { Order } from '../components/order';
 import { IOrder } from '../types/order';
@@ -8,10 +9,17 @@ import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 
 export const Wallet = (): ReactElement => {
   const [showBalance, setShowBalance] = useState<boolean>(false);
-  const [currentBalance, setCurrentBalance] = useState<number>(12);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentBalance, setCurrentBalance] = useState<number>(120);
+
+  const navigate = useNavigate();
 
   const toggleBalanceVisibility = (): void => {
     setShowBalance(!showBalance);
+  };
+
+  const handleNavigateMenu = (): void => {
+    navigate('/menu');
   };
 
   // Simulação de pedidos
@@ -43,14 +51,14 @@ export const Wallet = (): ReactElement => {
   ];
 
   return (
-    <div className='flex flex-col min-h-screen bg-gray-900 p-4 text-white'>
+    <div className='flex flex-col min-h-screen bg-gray-800 p-4 text-white'>
       {/* Título */}
       <div className='flex justify-end mb-4'>
         <h1 className='text-2xl font-bold'>Carteira</h1>
       </div>
 
       {/* Saldo disponível */}
-      <div className='bg-gray-800 p-4 rounded-lg mb-6'>
+      <div className='bg-gray-9000 p-4 rounded-lg mb-6'>
         <div className='flex justify-between items-center mb-2'>
           <span className='text-sm text-gray-400'>Saldo disponível</span>
         </div>
@@ -73,7 +81,7 @@ export const Wallet = (): ReactElement => {
       </div>
 
       {/* Histórico de pedidos */}
-      <div className='bg-gray-800 p-4 rounded-lg mb-6'>
+      <div className='bg-gray-900 p-4 rounded-lg mb-6'>
         <span className='text-sm text-gray-400 mb-2 block'>
           Histórico de pedidos
         </span>
@@ -95,7 +103,7 @@ export const Wallet = (): ReactElement => {
       </div>
 
       {/* Botão "Comprar produtos" fixado no rodapé */}
-      <div className='mt-auto flex justify-center'>
+      <div onClick={handleNavigateMenu} className='mt-auto flex justify-center'>
         <button className='bg-[var(--green)] w-2/3 py-3 rounded-3xl text-center font-bold text-black'>
           Comprar produtos
         </button>
