@@ -3,9 +3,19 @@ import { ReactElement } from 'react';
 import { formatDate, formatTime } from '../helpers/formatDateTime';
 import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 
-import { IOrder } from '../types/order';
+interface OrderCardProps {
+  id: number;
+  name: string;
+  value: number;
+  date: string;
+}
 
-export const Order = ({ id, name, value, date }: IOrder): ReactElement => {
+export const Order = ({
+  id,
+  name,
+  value,
+  date,
+}: OrderCardProps): ReactElement => {
   return (
     <li key={id} className='mt-2 flex gap-2 items-center'>
       <div className='flex items-center justify-center border-2 border-[#E3E3E3] rounded-md aspect-square h-16'>

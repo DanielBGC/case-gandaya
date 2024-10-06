@@ -6,17 +6,20 @@ import { Order } from '../components/order';
 import { IOrder } from '../types/order';
 
 import { useGetUser } from '../hooks/user';
+import { useGetOrders } from '../hooks/order';
 
 import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 
 import { useUserStore } from '../store';
 
 export const Wallet = (): ReactElement => {
-  const [showBalance, setShowBalance] = useState<boolean>(false);
-
   const { balance, setBalance } = useUserStore();
   const { getUser } = useGetUser();
+  const { getOrders } = useGetOrders();
   const navigate = useNavigate();
+
+  const [showBalance, setShowBalance] = useState<boolean>(false);
+  const [orderHistory, setOrderHistory] = useState<IOrder[]>([]);
 
   useEffect(() => {
     const handleGetUser = async (): Promise<void> => {
@@ -27,7 +30,17 @@ export const Wallet = (): ReactElement => {
       }
     };
 
+    const handleGetOrders = async (): Promise<void> => {
+      const response = await getOrders();
+
+      if (response.eventData) {
+        console.log('response.eventData: ', response.eventData);
+        setOrderHistory(response.eventData);
+      }
+    };
+
     handleGetUser();
+    handleGetOrders();
   }, []);
 
   const toggleBalanceVisibility = (): void => {
@@ -37,34 +50,6 @@ export const Wallet = (): ReactElement => {
   const handleNavigateMenu = (): void => {
     navigate('/menu');
   };
-
-  // Simulação de pedidos
-  const orderHistory: IOrder[] = [
-    {
-      id: 1,
-      name: 'Caipirinha de uva',
-      value: 27.5,
-      date: '2024-11-04T07:18:00.000-05:00',
-    },
-    {
-      id: 2,
-      name: 'Cerveja Heineken',
-      value: 45,
-      date: '2024-11-03T18:23:00.000-05:00',
-    },
-    {
-      id: 3,
-      name: 'Gin Tônica',
-      value: 54.2,
-      date: '2024-11-01T23:48:00.000-05:00',
-    },
-    {
-      id: 4,
-      name: 'Porção de fritas',
-      value: 29.9,
-      date: '2024-11-01T23:48:00.000-05:00',
-    },
-  ];
 
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 p-4 text-white'>
@@ -102,15 +87,17 @@ export const Wallet = (): ReactElement => {
         </span>
         <ul>
           {orderHistory.length ? (
-            orderHistory.map((order) => (
-              <Order
-                key={order.id}
-                id={order.id}
-                name={order.name}
-                value={order.value}
-                date={order.date}
-              />
-            ))
+            orderHistory.map((order) =>
+              order.items.map((item) => (
+                <Order
+                  key={order.id}
+                  id={order.id}
+                  name={item.name}
+                  value={order.total}
+                  date={order.createdAt}
+                />
+              ))
+            )
           ) : (
             <p className='text-gray-400'>Nenhum pedido encontrado</p>
           )}
