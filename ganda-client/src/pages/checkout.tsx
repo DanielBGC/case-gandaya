@@ -9,12 +9,10 @@ import { IModalCheckout } from '../types/modalCheckout';
 import { CheckoutCard } from '../components/checkoutCard';
 import { Modal } from '../components/modal';
 
-// Simulação de produtos
-import { listProducts } from '../store/listProducts';
 import { useUserStore } from '../store';
 
 export const Checkout = (): ReactElement => {
-  const { balance, purchasedItems } = useUserStore();
+  const { balance, purchasedItems, products } = useUserStore();
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<IModalCheckout>({
     success: false,
@@ -56,14 +54,14 @@ export const Checkout = (): ReactElement => {
   const totalValue = useMemo(() => {
     let total = 0;
     Object.keys(purchasedItems).forEach((id) => {
-      const product = listProducts.find((p) => p.id === parseInt(id));
+      const product = products.find((p) => p.id === parseInt(id));
 
       if (product) {
-        total += purchasedItems[parseInt(id)] * product.value;
+        total += purchasedItems[parseInt(id)] * product.price;
       }
     });
     return total;
-  }, [purchasedItems]);
+  }, [purchasedItems, products]);
 
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 pt-4 text-white'>
@@ -82,7 +80,7 @@ export const Checkout = (): ReactElement => {
       {/* Listagem de produtos */}
       <div className='flex flex-col overflow-auto pb-32 mt-6 gap-4'>
         {Object.keys(purchasedItems).map((id) => {
-          const product = listProducts.find((p) => p.id === parseInt(id));
+          const product = products.find((p) => p.id === parseInt(id));
           const quantity = purchasedItems[parseInt(id)];
 
           // Verifica se o produto existe e tem quantidade maior que 0
@@ -93,8 +91,8 @@ export const Checkout = (): ReactElement => {
               key={product.id}
               id={product.id}
               name={product.name}
-              value={product.value}
-              estoque={product.estoque}
+              value={product.price}
+              estoque={product.stock}
               quantity={quantity}
               image={product.image}
             />

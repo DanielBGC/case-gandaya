@@ -12,7 +12,7 @@ import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 import { useUserStore } from '../store';
 
 export const Wallet = (): ReactElement => {
-  const [showBalance, setShowBalance] = useState<boolean>(true);
+  const [showBalance, setShowBalance] = useState<boolean>(false);
 
   const { balance, setBalance } = useUserStore();
   const { getUser } = useGetUser();

@@ -5,16 +5,31 @@ import { FaSearch } from 'react-icons/fa';
 
 import { ProductCard } from '../components/productCard';
 import { numberToCurrencyFormat } from '../helpers';
+import { IProduct } from '../types/product';
 
-// Simulação de produtos
-import { listProducts } from '../store/listProducts';
 import { useUserStore } from '../store';
 
-export const Menu = (): ReactElement => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState(listProducts);
+import { useGetProducts } from '../hooks/product';
 
-  const { purchasedItems } = useUserStore();
+export const Menu = (): ReactElement => {
+  const { getProducts } = useGetProducts();
+  const { purchasedItems, products, setProducts } = useUserStore();
+
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const handleGetProducts = async (): Promise<void> => {
+      const response = await getProducts();
+
+      if (response.eventData) {
+        setProducts(response.eventData);
+        setFilteredProducts(response.eventData);
+      }
+    };
+
+    handleGetProducts();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -32,15 +47,15 @@ export const Menu = (): ReactElement => {
 
   useEffect(() => {
     if (searchTerm === '') {
-      setFilteredProducts(listProducts); // Se a busca estiver vazia, mostra todos os produtos
+      setFilteredProducts(products); // Se a busca estiver vazia, mostra todos os produtos
     } else {
-      const filtered = listProducts.filter(
+      const filtered = products.filter(
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra por nome, ignorando letras maiúsculas e minúsculas
       );
       setFilteredProducts(filtered); // Atualiza o estado com os produtos filtrados
     }
-  }, [searchTerm]);
+  }, [searchTerm, products]);
 
   useEffect(() => {
     console.log('purchasedItems: ', purchasedItems);
@@ -49,14 +64,14 @@ export const Menu = (): ReactElement => {
   const totalValue = useMemo(() => {
     let total = 0;
     Object.keys(purchasedItems).forEach((id) => {
-      const product = listProducts.find((p) => p.id === parseInt(id));
+      const product = products.find((p) => p.id === parseInt(id));
 
       if (product) {
-        total += purchasedItems[parseInt(id)] * product.value;
+        total += purchasedItems[parseInt(id)] * product.price;
       }
     });
     return total;
-  }, [purchasedItems]);
+  }, [purchasedItems, products]);
 
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 pt-4 text-white'>
@@ -86,14 +101,14 @@ export const Menu = (): ReactElement => {
       </div>
 
       {/* Listagem de produtos */}
-      <div className='grid grid-cols-3'>
+      <div className='grid grid-cols-3 overflow-auto pb-24'>
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
             name={product.name}
-            value={product.value}
-            estoque={product.estoque}
+            value={product.price}
+            estoque={product.stock}
             image={product.image}
             quantity={purchasedItems[product.id] || 0}
           />

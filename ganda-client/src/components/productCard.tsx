@@ -34,6 +34,7 @@ export const ProductCard = ({
   const toggleQuantitySelector = (): void => {
     if (quantity === 0) {
       setShowQuantitySelector(!showQuantitySelector);
+      setPurchasedItems(id, quantity + 1);
     }
   };
 

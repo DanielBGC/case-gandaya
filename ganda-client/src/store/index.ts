@@ -1,18 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-
-// interface PurchasedItem {
-//   id: number;
-//   name: string;
-//   quantity: number;
-//   value: number;
-// }
+import { IProduct } from '../types/product';
 
 interface IUserStore {
   balance: number;
+  products: IProduct[];
   purchasedItems: Record<number, number>;
 
   setBalance: (newBalance: number) => void;
+  setProducts: (newProducts: IProduct[]) => void;
   setPurchasedItems: (id: number, quantity: number) => void;
   clearPurchasedItems: () => void;
 }
@@ -21,11 +17,17 @@ export const useUserStore = create(
   persist<IUserStore>(
     (set) => ({
       balance: 0,
+      products: [],
       purchasedItems: [],
 
       // Função para atualizar o saldo
       setBalance: (newBalance: number) => {
         set({ balance: newBalance });
+      },
+
+      // Função para atualizar os produtos
+      setProducts: (newProducts: IProduct[]) => {
+        set({ products: newProducts });
       },
 
       // Função para atualizar os itens do carrinho
