@@ -21,6 +21,7 @@ model Product {
   name            String
   price           Float
   stock           Int
+  image           String
   CartItem        CartItem[]
   UserOrderItem   UserOrderItem[]
 }
