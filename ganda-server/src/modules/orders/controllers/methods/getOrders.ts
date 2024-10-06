@@ -4,9 +4,7 @@ import { OrderExistencyError } from '../../errors';
 import { OrderController } from '..';
 import { PrismaEvent } from '../../entities/UserOrder';
 
-export async function getOrders(
-  this: OrderController
-): Promise<BaseResponse<PrismaEvent[]>> {
+export async function getOrders(this: OrderController): Promise<any> {
   try {
     const response = await this.orderService.getOrders();
 

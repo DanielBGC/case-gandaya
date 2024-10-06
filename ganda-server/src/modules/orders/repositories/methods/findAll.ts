@@ -11,5 +11,8 @@ export async function findAll(this: OrderRepository): Promise<PrismaEvent[]> {
         },
       },
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 }

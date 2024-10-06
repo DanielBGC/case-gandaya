@@ -10,5 +10,22 @@ export async function getOrders(
 
   const { status, json } = response;
 
-  res.status(status).json(json);
+  const data = json.map((order: any) => ({
+    id: order.id,
+    userId: order.userId,
+    total: order.total,
+    createdAt: order.createdAt,
+    items: order.items.map((item: any) => {
+      return {
+        productId: item.productId,
+        quantity: item.quantity,
+        name: item.product.name,
+        price: item.product.price,
+        stock: item.product.stock,
+        image: item.product.image,
+      };
+    }),
+  }));
+
+  res.status(status).json(data);
 }
