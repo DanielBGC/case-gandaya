@@ -13,7 +13,7 @@ import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 import { useUserStore } from '../store';
 
 export const Wallet = (): ReactElement => {
-  const { balance, setBalance } = useUserStore();
+  const { balance, setBalance, setUserId } = useUserStore();
   const { getUser } = useGetUser();
   const { getOrders } = useGetOrders();
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ export const Wallet = (): ReactElement => {
 
       if (response.eventData) {
         setBalance(response.eventData.balance);
+        setUserId(response.eventData.id);
       }
     };
 
@@ -34,7 +35,7 @@ export const Wallet = (): ReactElement => {
       const response = await getOrders();
 
       if (response.eventData) {
-        console.log('response.eventData: ', response.eventData);
+        console.log(response.eventData);
         setOrderHistory(response.eventData);
       }
     };
@@ -88,12 +89,12 @@ export const Wallet = (): ReactElement => {
         <ul>
           {orderHistory.length ? (
             orderHistory.map((order) =>
-              order.items.map((item) => (
+              order.items.map((item, index) => (
                 <Order
-                  key={order.id}
+                  key={order.id + index}
                   id={order.id}
                   name={item.name}
-                  value={order.total}
+                  value={item.price * item.quantity}
                   date={order.createdAt}
                 />
               ))

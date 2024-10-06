@@ -1,4 +1,4 @@
-import { useState, useMemo, ReactElement } from 'react';
+import { useState, useCallback, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
@@ -10,9 +10,21 @@ import { CheckoutCard } from '../components/checkoutCard';
 import { Modal } from '../components/modal';
 
 import { useUserStore } from '../store';
+import { useCreateCart, IEventReturn } from '../hooks/cart';
 
 export const Checkout = (): ReactElement => {
-  const { balance, purchasedItems, products } = useUserStore();
+  const { createCart } = useCreateCart();
+  const navigate = useNavigate();
+
+  const {
+    userId,
+    balance,
+    purchasedItems,
+    products,
+    setProducts,
+    clearPurchasedItems,
+  } = useUserStore();
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState<IModalCheckout>({
     success: false,
@@ -21,33 +33,75 @@ export const Checkout = (): ReactElement => {
     onClose: () => null,
   });
 
-  const handleCheckoutButton = () => {
-    if (balance >= totalValue) {
-      const newBalance = balance - totalValue;
-      setModalInfo({
-        success: true,
-        title: 'Compra realizada!',
-        message: `O seu saldo é de R$ ${numberToCurrencyFormat(newBalance)}`,
-        onClose: () => {
-          setModalOpen(false);
-          // navigate('/wallet');
-        },
-      });
-    } else {
-      setModalInfo({
-        success: false,
-        title: 'Saldo insuficiente!',
-        message: '',
-        onClose: () => setModalOpen(false),
-      });
+  const handleCreateCart = useCallback(
+    async ({ isAbandoned }: { isAbandoned: boolean }) => {
+      try {
+        const response = await createCart({
+          userId,
+          items: purchasedItems,
+          abandoned: isAbandoned,
+        });
+
+        if (!isAbandoned) {
+          handleResponseCheckout(response);
+        } else {
+          console.log('Carrinho abandonado com sucesso');
+        }
+      } catch (error) {
+        console.error(
+          isAbandoned
+            ? 'Erro ao abandonar carrinho:'
+            : 'Erro ao realizar checkout:',
+          error
+        );
+      }
+    },
+    [purchasedItems, userId]
+  );
+
+  const handleResponseCheckout = (response: IEventReturn) => {
+    if (response.status === 200) {
+      handleSuccessResponse();
+    } else if (response.error) {
+      handleErrorResponse(response.error);
     }
 
     setModalOpen(true);
   };
 
-  const navigate = useNavigate();
+  const handleSuccessResponse = () => {
+    const newBalance = balance - totalValue;
+    setModalInfo({
+      success: true,
+      title: 'Compra realizada!',
+      message: `O seu saldo é de R$ ${numberToCurrencyFormat(newBalance)}`,
+      onClose: () => {
+        setProducts([]);
+        clearPurchasedItems();
+        setModalOpen(false);
+        navigate('/wallet');
+      },
+    });
+  };
+
+  const handleErrorResponse = (error: string) => {
+    const isInsufficientBalance = error.includes('Insufficient Balance');
+    const errorMessage = isInsufficientBalance
+      ? 'Saldo insuficiente!'
+      : 'Ocorreu um erro ao processar a compra.';
+
+    setModalInfo({
+      success: false,
+      title: errorMessage,
+      message: '',
+      onClose: () => setModalOpen(false),
+    });
+  };
 
   const handleNavigateBack = (): void => {
+    if (Object.keys(purchasedItems).length > 0) {
+      handleCreateCart({ isAbandoned: true });
+    }
     navigate('/menu');
   };
 
@@ -101,7 +155,7 @@ export const Checkout = (): ReactElement => {
       </div>
 
       {/* Valor total da compra */}
-      <div className='mt-auto w-full fixed bottom-0 h-24 bg-slate-900 flex items-center'>
+      <div className='mt-auto w-full h-24 bg-slate-900 flex items-center'>
         <div className='flex justify-between items-center w-full px-5'>
           <div className='flex flex-col'>
             <span className='font-thin text-sm text-[#A2A2A2]'>
@@ -112,7 +166,7 @@ export const Checkout = (): ReactElement => {
             </span>
           </div>
           <button
-            onClick={handleCheckoutButton}
+            onClick={() => handleCreateCart({ isAbandoned: false })}
             className='bg-[var(--green)] px-8 py-3 rounded-3xl text-center font-bold text-black'
           >
             Confirmar

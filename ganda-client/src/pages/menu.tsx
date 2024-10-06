@@ -116,7 +116,7 @@ export const Menu = (): ReactElement => {
       </div>
 
       {/* Valor total da compra */}
-      <div className='mt-auto w-full fixed bottom-0 h-24 bg-slate-900 flex items-center'>
+      <div className='mt-auto w-full h-24 bg-slate-900 flex items-center'>
         <div className='flex justify-between items-center w-full px-5'>
           <div className='flex flex-col'>
             <span className='font-thin text-sm text-[#A2A2A2]'>

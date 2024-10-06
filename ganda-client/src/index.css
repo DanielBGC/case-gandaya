@@ -99,3 +99,18 @@ h6,
 span {
   font-family: 'Matter', sans-serif;
 }
+
+/* body {
+  background-color: rgb(156, 160, 154);
+}
+
+/* Para fixar largura do dispositivo */
+#root {
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
