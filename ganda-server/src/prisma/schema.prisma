@@ -9,29 +9,29 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String
-  balance Float
-  Cart    Cart[]
-  Order   Order[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  balance     Float
+  Cart        Cart[]
+  UserOrder   UserOrder[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  price       Float
-  stock       Int
-  CartItem    CartItem[]
-  OrderItem   OrderItem[]
+  id              Int      @id @default(autoincrement())
+  name            String
+  price           Float
+  stock           Int
+  CartItem        CartItem[]
+  UserOrderItem   UserOrderItem[]
 }
 
 model Cart {
-  id         Int        @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   userId     Int
-  user       User       @relation(fields: [userId], references: [id])
+  user       User         @relation(fields: [userId], references: [id])
   items      CartItem[]
-  abandoned  Boolean    @default(true)
-  createdAt  DateTime   @default(now())
+  abandoned  Boolean      @default(true)
+  createdAt  DateTime     @default(now())
 }
 
 model CartItem {
@@ -43,20 +43,20 @@ model CartItem {
   cart      Cart     @relation(fields: [cartId], references: [id])
 }
 
-model Order {
-  id        Int      @id @default(autoincrement())
+model UserOrder {
+  id        Int               @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  items     OrderItem[]
+  user      User              @relation(fields: [userId], references: [id])
+  items     UserOrderItem[]
   total     Float
-  createdAt DateTime @default(now())
+  createdAt DateTime          @default(now())
 }
 
-model OrderItem {
-  id        Int      @id @default(autoincrement())
-  orderId   Int
+model UserOrderItem {
+  id        Int           @id @default(autoincrement())
+  userOrderId   Int
   productId Int
   quantity  Int
-  product   Product  @relation(fields: [productId], references: [id])
-  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product       @relation(fields: [productId], references: [id])
+  order     UserOrder     @relation(fields: [userOrderId], references: [id])
 }
