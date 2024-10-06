@@ -20,7 +20,7 @@ interface IUserStore {
 export const useUserStore = create(
   persist<IUserStore>(
     (set) => ({
-      balance: 120,
+      balance: 0,
       purchasedItems: [],
 
       // Função para atualizar o saldo

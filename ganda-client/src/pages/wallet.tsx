@@ -1,20 +1,34 @@
-import { useState, ReactElement } from 'react';
+import { useEffect, useState, ReactElement } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import { Order } from '../components/order';
 import { IOrder } from '../types/order';
 
+import { useGetUser } from '../hooks/user';
+
 import { numberToCurrencyFormat } from '../helpers/formatCurrency';
 
 import { useUserStore } from '../store';
 
 export const Wallet = (): ReactElement => {
-  const [showBalance, setShowBalance] = useState<boolean>(false);
+  const [showBalance, setShowBalance] = useState<boolean>(true);
 
-  const { balance } = useUserStore();
-
+  const { balance, setBalance } = useUserStore();
+  const { getUser } = useGetUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleGetUser = async (): Promise<void> => {
+      const response = await getUser(1);
+
+      if (response.eventData) {
+        setBalance(response.eventData.balance);
+      }
+    };
+
+    handleGetUser();
+  }, []);
 
   const toggleBalanceVisibility = (): void => {
     setShowBalance(!showBalance);

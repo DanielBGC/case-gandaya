@@ -1,17 +1,51 @@
-import { useMemo, ReactElement } from 'react';
+import { useState, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import { numberToCurrencyFormat } from '../helpers';
 
+import { IModalCheckout } from '../types/modalCheckout';
+
 import { CheckoutCard } from '../components/checkoutCard';
+import { Modal } from '../components/modal';
 
 // Simulação de produtos
 import { listProducts } from '../store/listProducts';
 import { useUserStore } from '../store';
 
 export const Checkout = (): ReactElement => {
-  const { purchasedItems } = useUserStore();
+  const { balance, purchasedItems } = useUserStore();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalInfo, setModalInfo] = useState<IModalCheckout>({
+    success: false,
+    title: '',
+    message: '',
+    onClose: () => null,
+  });
+
+  const handleCheckoutButton = () => {
+    if (balance >= totalValue) {
+      const newBalance = balance - totalValue;
+      setModalInfo({
+        success: true,
+        title: 'Compra realizada!',
+        message: `O seu saldo é de R$ ${numberToCurrencyFormat(newBalance)}`,
+        onClose: () => {
+          setModalOpen(false);
+          // navigate('/wallet');
+        },
+      });
+    } else {
+      setModalInfo({
+        success: false,
+        title: 'Saldo insuficiente!',
+        message: '',
+        onClose: () => setModalOpen(false),
+      });
+    }
+
+    setModalOpen(true);
+  };
 
   const navigate = useNavigate();
 
@@ -79,11 +113,22 @@ export const Checkout = (): ReactElement => {
               R$ {numberToCurrencyFormat(totalValue)}
             </span>
           </div>
-          <button className='bg-[var(--green)] px-8 py-3 rounded-3xl text-center font-bold text-black'>
+          <button
+            onClick={handleCheckoutButton}
+            className='bg-[var(--green)] px-8 py-3 rounded-3xl text-center font-bold text-black'
+          >
             Confirmar
           </button>
         </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        success={modalInfo.success}
+        title={modalInfo.title}
+        message={modalInfo.message}
+        onClose={modalInfo.onClose}
+      />
     </div>
   );
 };
