@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsc --noEmit && nodemon --watch 'src' src/server.ts",
-    "build": "tsc && cd src/prisma/ && npx prisma generate && cd ../../",
+    "build": "cd src/prisma/ && npx prisma generate && tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
