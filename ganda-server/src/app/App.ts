@@ -36,7 +36,7 @@ export class App {
   private setupCors() {
     this.app.use(
       cors({
-        origin: ['http://localhost:5173'],
+        origin: ['http://localhost:5173', 'https://case-gandaya.vercel.app'],
         credentials: true,
       })
     );
