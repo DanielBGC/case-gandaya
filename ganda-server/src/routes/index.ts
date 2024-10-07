@@ -8,10 +8,6 @@ import { CartRouter } from '../modules/carts/routes/CartRouter';
 export class AppRouter {
   routes = (): Router => {
     const router = Router();
-    router.use('/', (req, res) => {
-      res.status(200).json({ msg: 'Server running!' });
-    });
-
     router.use('/users', UserRouter.routes());
     router.use('/orders', OrderRouter.routes());
     router.use('/products', ProductRouter.routes());
