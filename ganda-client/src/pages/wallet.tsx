@@ -35,7 +35,6 @@ export const Wallet = (): ReactElement => {
       const response = await getOrders();
 
       if (response.eventData) {
-        console.log(response.eventData);
         setOrderHistory(response.eventData);
       }
     };
@@ -82,10 +81,10 @@ export const Wallet = (): ReactElement => {
       </div>
 
       {/* Histórico de pedidos */}
-      <div className='bg-gray-900 p-4 rounded-lg mb-6'>
-        <span className='text-sm text-gray-400 mb-2 block'>
-          Histórico de pedidos
-        </span>
+      <span className='text-sm text-gray-400 mb-2 block'>
+        Histórico de pedidos
+      </span>
+      <div className='p-4 rounded-lg mb-6 overflow-auto'>
         <ul>
           {orderHistory.length ? (
             orderHistory.map((order) =>

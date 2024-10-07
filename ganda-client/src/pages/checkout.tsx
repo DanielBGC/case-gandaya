@@ -132,7 +132,7 @@ export const Checkout = (): ReactElement => {
       </div>
 
       {/* Listagem de produtos */}
-      <div className='flex flex-col overflow-auto pb-32 mt-6 gap-4'>
+      <div className='flex flex-col overflow-auto pb-8 mt-6 gap-4'>
         {Object.keys(purchasedItems).map((id) => {
           const product = products.find((p) => p.id === parseInt(id));
           const quantity = purchasedItems[parseInt(id)];
@@ -155,7 +155,7 @@ export const Checkout = (): ReactElement => {
       </div>
 
       {/* Valor total da compra */}
-      <div className='mt-auto w-full h-24 bg-slate-900 flex items-center'>
+      <div className='mt-auto w-full h-24 py-4 bg-slate-900 flex items-center'>
         <div className='flex justify-between items-center w-full px-5'>
           <div className='flex flex-col'>
             <span className='font-thin text-sm text-[#A2A2A2]'>
