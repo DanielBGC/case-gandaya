@@ -1,7 +1,7 @@
 import { FiCheckCircle } from 'react-icons/fi';
 import { FaCircleXmark } from 'react-icons/fa6';
 
-import { MainButton } from './MainButton';
+import { MainButton } from './mainButton';
 
 interface ModalProps {
   isOpen: boolean;
