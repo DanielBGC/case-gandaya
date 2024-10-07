@@ -1,13 +1,15 @@
 import { useState, useCallback, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { numberToCurrencyFormat } from '../helpers';
 
 import { IModalCheckout } from '../types/modalCheckout';
 
-import { CheckoutCard } from '../components/checkoutCard';
-import { Modal } from '../components/modal';
+import { CheckoutCard } from '../components/CheckoutCard';
+import { Modal } from '../components/Modal';
+import { MainButton } from '../components/MainButton';
 
 import { useUserStore } from '../store';
 import { useCreateCart, IEventReturn } from '../hooks/cart';
@@ -133,25 +135,35 @@ export const Checkout = (): ReactElement => {
 
       {/* Listagem de produtos */}
       <div className='flex flex-col overflow-auto pb-8 mt-6 gap-4'>
-        {Object.keys(purchasedItems).map((id) => {
-          const product = products.find((p) => p.id === parseInt(id));
-          const quantity = purchasedItems[parseInt(id)];
+        <AnimatePresence>
+          {Object.keys(purchasedItems).map((id) => {
+            const product = products.find((p) => p.id === parseInt(id));
+            const quantity = purchasedItems[parseInt(id)];
 
-          // Verifica se o produto existe e tem quantidade maior que 0
-          if (!product || quantity <= 0) return null;
+            // Verifica se o produto existe e tem quantidade maior que 0
+            if (!product || quantity <= 0) return null;
 
-          return (
-            <CheckoutCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              value={product.price}
-              estoque={product.stock}
-              quantity={quantity}
-              image={product.image}
-            />
-          );
-        })}
+            return (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <CheckoutCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  value={product.price}
+                  estoque={product.stock}
+                  quantity={quantity}
+                  image={product.image}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
 
       {/* Valor total da compra */}
@@ -165,12 +177,13 @@ export const Checkout = (): ReactElement => {
               R$ {numberToCurrencyFormat(totalValue)}
             </span>
           </div>
-          <button
-            onClick={() => handleCreateCart({ isAbandoned: false })}
-            className='bg-[var(--green)] px-8 py-3 rounded-3xl text-center font-bold text-black'
+
+          <MainButton
+            handleOnClick={() => handleCreateCart({ isAbandoned: false })}
+            className='px-10'
           >
             Confirmar
-          </button>
+          </MainButton>
         </div>
       </div>
 

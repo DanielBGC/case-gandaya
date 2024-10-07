@@ -1,6 +1,8 @@
 import { FiCheckCircle } from 'react-icons/fi';
 import { FaCircleXmark } from 'react-icons/fa6';
 
+import { MainButton } from './MainButton';
+
 interface ModalProps {
   isOpen: boolean;
   success: boolean;
@@ -37,14 +39,9 @@ export const Modal = ({
         </div>
 
         {/* Botão */}
-        <div className='mt-4'>
-          <button
-            onClick={onClose}
-            className='bg-[var(--green)] w-full py-3 rounded-3xl text-center font-bold text-black'
-          >
-            Continuar
-          </button>
-        </div>
+        <MainButton handleOnClick={onClose} className='w-full mt-4'>
+          Confirmar
+        </MainButton>
       </div>
     </div>
   );

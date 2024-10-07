@@ -1,8 +1,10 @@
 import { useEffect, useState, ReactElement } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import { Order } from '../components/order';
+import { MainButton } from '../components/MainButton';
+import { Order } from '../components/Order';
 import { IOrder } from '../types/order';
 
 import { useGetUser } from '../hooks/user';
@@ -64,9 +66,15 @@ export const Wallet = (): ReactElement => {
           <span className='text-sm text-gray-400'>Saldo disponível</span>
         </div>
         <div className='flex justify-between items-center'>
-          <span className='text-2xl font-bold'>
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className='text-2xl font-bold'
+          >
             R$ {showBalance ? `${numberToCurrencyFormat(balance)}` : '****'}
-          </span>
+          </motion.span>
           <button
             onClick={toggleBalanceVisibility}
             className='focus:outline-none'
@@ -86,30 +94,40 @@ export const Wallet = (): ReactElement => {
       </span>
       <div className='p-4 rounded-lg mb-6 overflow-auto'>
         <ul>
-          {orderHistory.length ? (
-            orderHistory.map((order) =>
-              order.items.map((item, index) => (
-                <Order
-                  key={order.id + index}
-                  id={order.id}
-                  name={item.name}
-                  value={item.price * item.quantity}
-                  date={order.createdAt}
-                />
-              ))
-            )
-          ) : (
-            <p className='text-gray-400'>Nenhum pedido encontrado</p>
-          )}
+          <AnimatePresence>
+            {orderHistory.length ? (
+              orderHistory.map((order) =>
+                order.items.map((item, index) => (
+                  <motion.div
+                    key={order.id + index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Order
+                      key={order.id + index}
+                      id={order.id}
+                      name={item.name}
+                      value={item.price * item.quantity}
+                      date={order.createdAt}
+                    />
+                  </motion.div>
+                ))
+              )
+            ) : (
+              <p className='text-gray-400'>Nenhum pedido encontrado</p>
+            )}
+          </AnimatePresence>
         </ul>
       </div>
 
-      {/* Botão "Comprar produtos" fixado no rodapé */}
-      <div onClick={handleNavigateMenu} className='mt-auto flex justify-center'>
-        <button className='bg-[var(--green)] w-2/3 py-3 rounded-3xl text-center font-bold text-black'>
-          Comprar produtos
-        </button>
-      </div>
+      <MainButton
+        handleOnClick={handleNavigateMenu}
+        className='w-3/4 self-center mt-auto'
+      >
+        Comprar produtos
+      </MainButton>
     </div>
   );
 };

@@ -2,8 +2,10 @@ import { useEffect, useState, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { FaSearch } from 'react-icons/fa';
+import { AnimatePresence, motion } from 'framer-motion';
 
-import { ProductCard } from '../components/productCard';
+import { ProductCard } from '../components/ProductCard';
+import { MainButton } from '../components/MainButton';
 import { numberToCurrencyFormat } from '../helpers';
 import { IProduct } from '../types/product';
 
@@ -102,17 +104,27 @@ export const Menu = (): ReactElement => {
 
       {/* Listagem de produtos */}
       <div className='grid grid-cols-3 overflow-auto pb-8'>
-        {filteredProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            value={product.price}
-            estoque={product.stock}
-            image={product.image}
-            quantity={purchasedItems[product.id] || 0}
-          />
-        ))}
+        <AnimatePresence>
+          {filteredProducts.map((product) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                value={product.price}
+                estoque={product.stock}
+                image={product.image}
+                quantity={purchasedItems[product.id] || 0}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Valor total da compra */}
@@ -126,12 +138,9 @@ export const Menu = (): ReactElement => {
               R$ {numberToCurrencyFormat(totalValue)}
             </span>
           </div>
-          <button
-            onClick={handleNavigateCheckout}
-            className='bg-[var(--green)] px-8 py-3 rounded-3xl text-center font-bold text-black'
-          >
+          <MainButton handleOnClick={handleNavigateCheckout} className='px-10'>
             Confirmar
-          </button>
+          </MainButton>
         </div>
       </div>
     </div>
