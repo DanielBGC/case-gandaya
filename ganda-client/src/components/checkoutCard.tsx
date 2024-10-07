@@ -64,7 +64,7 @@ export const CheckoutCard = ({
           {quantity > 1 ? (
             <FiMinus className='text-black' size={20} />
           ) : (
-            <FaTrash className='text-black' size={18} />
+            <FaTrash className='text-black' size={20} />
           )}
         </button>
         <span
