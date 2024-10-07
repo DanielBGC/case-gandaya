@@ -1,15 +1,12 @@
-import { useState, useCallback, useMemo, ReactElement } from 'react';
+import { useCallback, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { numberToCurrencyFormat } from '../helpers';
 
-import { IModalCheckout } from '../types/modalCheckout';
-
 import { CheckoutCard } from '../components/checkoutCard';
-import { Modal } from '../components/modal';
 import { MainButton } from '../components/button';
+import { PageHeader } from '../components/pageHeader';
 
 import { useUserStore } from '../store';
 import { useCreateCart, IEventReturn } from '../hooks/cart';
@@ -25,15 +22,21 @@ export const Checkout = (): ReactElement => {
     products,
     setProducts,
     clearPurchasedItems,
+    setModalOpen,
+    setModalInfo,
   } = useUserStore();
 
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [modalInfo, setModalInfo] = useState<IModalCheckout>({
-    success: false,
-    title: '',
-    message: '',
-    onClose: () => null,
-  });
+  const totalValue = useMemo(() => {
+    let total = 0;
+    Object.keys(purchasedItems).forEach((id) => {
+      const product = products.find((p) => p.id === parseInt(id));
+
+      if (product) {
+        total += purchasedItems[parseInt(id)] * product.price;
+      }
+    });
+    return total;
+  }, [purchasedItems, products]);
 
   const handleCreateCart = useCallback(
     async ({ isAbandoned }: { isAbandoned: boolean }) => {
@@ -100,38 +103,41 @@ export const Checkout = (): ReactElement => {
     });
   };
 
+  const handleCheckoutButton = (): void => {
+    if (totalValue <= 0) {
+      console.log('CARRINHO VAZIO');
+      setModalInfo({
+        success: false,
+        title: 'Carrinho vazio!',
+        message: `Atenção! Você ainda não selecionou nenhum produto.`,
+        onClose: () => {
+          setModalOpen(false);
+        },
+      });
+      setModalOpen(true);
+      return;
+    }
+
+    handleCreateCart({ isAbandoned: false });
+  };
+
   const handleNavigateBack = (): void => {
-    if (Object.keys(purchasedItems).length > 0) {
+    if (totalValue > 0) {
+      console.log('CARRINHO ABANDONADO');
       handleCreateCart({ isAbandoned: true });
     }
+
     navigate('/menu');
   };
 
-  const totalValue = useMemo(() => {
-    let total = 0;
-    Object.keys(purchasedItems).forEach((id) => {
-      const product = products.find((p) => p.id === parseInt(id));
-
-      if (product) {
-        total += purchasedItems[parseInt(id)] * product.price;
-      }
-    });
-    return total;
-  }, [purchasedItems, products]);
-
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 pt-4 text-white'>
-      {/* Título */}
-      <div className='flex justify-between mb-4 px-4 '>
-        <button
-          onClick={handleNavigateBack}
-          className='flex items-center justify-center bg-slate-200 rounded-full w-8'
-        >
-          <FiArrowLeft className='text-black' size={20} />
-        </button>
-
-        <h1 className='text-2xl font-bold'>Checkout</h1>
-      </div>
+      {/* Header */}
+      <PageHeader
+        title='Checkout'
+        showBackButton={true}
+        handleClickBackButton={handleNavigateBack}
+      />
 
       {/* Listagem de produtos */}
       <div className='flex flex-col overflow-auto pb-8 mt-6 gap-4'>
@@ -178,22 +184,11 @@ export const Checkout = (): ReactElement => {
             </span>
           </div>
 
-          <MainButton
-            handleOnClick={() => handleCreateCart({ isAbandoned: false })}
-            className='px-10'
-          >
+          <MainButton handleOnClick={handleCheckoutButton} className='px-10'>
             Confirmar
           </MainButton>
         </div>
       </div>
-
-      <Modal
-        isOpen={isModalOpen}
-        success={modalInfo.success}
-        title={modalInfo.title}
-        message={modalInfo.message}
-        onClose={modalInfo.onClose}
-      />
     </div>
   );
 };

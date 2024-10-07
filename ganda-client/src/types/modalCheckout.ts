@@ -1,4 +1,4 @@
-export type IModalCheckout = {
+export type IModal = {
   success: boolean;
   title: string;
   message: string;

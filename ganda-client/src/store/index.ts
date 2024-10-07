@@ -1,18 +1,23 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { IProduct } from '../types/product';
+import { IModal } from '../types/modalCheckout';
 
 interface IUserStore {
   userId: number;
   balance: number;
   products: IProduct[];
   purchasedItems: Record<number, number>;
+  isModalOpen: boolean;
+  modalInfo: IModal;
 
   setUserId: (newUserId: number) => void;
   setBalance: (newBalance: number) => void;
   setProducts: (newProducts: IProduct[]) => void;
   setPurchasedItems: (id: number, quantity: number) => void;
   clearPurchasedItems: () => void;
+  setModalOpen: (isOpen: boolean) => void;
+  setModalInfo: (newModalInfo: IModal) => void;
 }
 
 export const useUserStore = create(
@@ -22,6 +27,13 @@ export const useUserStore = create(
       balance: 0,
       products: [],
       purchasedItems: [],
+      isModalOpen: false,
+      modalInfo: {
+        success: false,
+        title: '',
+        message: '',
+        onClose: () => null,
+      },
 
       // Função para atualizar o ID do usuário
       setUserId: (newUserId: number) => {
@@ -50,6 +62,16 @@ export const useUserStore = create(
       // Função para limpar todos os itens comprados
       clearPurchasedItems: () => {
         set({ purchasedItems: [] });
+      },
+
+      // Função para exibir o modal
+      setModalOpen: (isOpen) => {
+        set({ isModalOpen: isOpen });
+      },
+
+      // Função para atualizar as informações do Modal
+      setModalInfo: (newModalInfo) => {
+        set({ modalInfo: newModalInfo });
       },
     }),
     {

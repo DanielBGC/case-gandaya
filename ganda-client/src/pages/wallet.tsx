@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { MainButton } from '../components/button';
 import { Order } from '../components/order';
+import { PageHeader } from '../components/pageHeader';
 import { IOrder } from '../types/order';
 
 import { useGetUser } from '../hooks/user';
@@ -55,10 +56,8 @@ export const Wallet = (): ReactElement => {
 
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 p-4 text-white'>
-      {/* Título */}
-      <div className='flex justify-end mb-4'>
-        <h1 className='text-2xl font-bold'>Carteira</h1>
-      </div>
+      {/* Header */}
+      <PageHeader title='Carteira' showBackButton={false} />
 
       {/* Saldo disponível */}
       <div className='bg-gray-9000 p-4 rounded-lg mb-6'>

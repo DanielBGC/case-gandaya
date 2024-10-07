@@ -21,7 +21,7 @@ export const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end'>
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end z-50'>
       <div className='bg-white w-full max-w-md p-6 rounded-t-2xl text-center'>
         {/* Ícone e título */}
         <div className='flex flex-col items-center'>

@@ -1,11 +1,11 @@
 import { useEffect, useState, useMemo, ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
 import { FaSearch } from 'react-icons/fa';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { ProductCard } from '../components/productCard';
 import { MainButton } from '../components/button';
+import { PageHeader } from '../components/pageHeader';
 
 import { numberToCurrencyFormat } from '../helpers';
 import { IProduct } from '../types/product';
@@ -16,7 +16,8 @@ import { useGetProducts } from '../hooks/product';
 
 export const Menu = (): ReactElement => {
   const { getProducts } = useGetProducts();
-  const { purchasedItems, products, setProducts } = useUserStore();
+  const { purchasedItems, products, setProducts, setModalOpen, setModalInfo } =
+    useUserStore();
 
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,11 +37,23 @@ export const Menu = (): ReactElement => {
 
   const navigate = useNavigate();
 
-  const handleNavigateBack = (): void => {
-    navigate('/wallet');
-  };
+  const handleNavigateBack = (): void => navigate('/wallet');
 
   const handleNavigateCheckout = (): void => {
+    if (totalValue <= 0) {
+      console.log('CARRINHO VAZIO');
+      setModalInfo({
+        success: false,
+        title: 'Carrinho vazio!',
+        message: `Atenção! Você ainda não selecionou nenhum produto.`,
+        onClose: () => {
+          setModalOpen(false);
+        },
+      });
+      setModalOpen(true);
+      return;
+    }
+
     navigate('/checkout');
   };
 
@@ -78,17 +91,12 @@ export const Menu = (): ReactElement => {
 
   return (
     <div className='flex flex-col min-h-screen bg-gray-800 pt-4 text-white'>
-      {/* Título */}
-      <div className='flex justify-between mb-4 px-4 '>
-        <button
-          onClick={handleNavigateBack}
-          className='flex items-center justify-center bg-slate-200 rounded-full w-8'
-        >
-          <FiArrowLeft className='text-black' size={20} />
-        </button>
-
-        <h1 className='text-2xl font-bold'>Cardápio</h1>
-      </div>
+      {/* Header */}
+      <PageHeader
+        title='Cardápio'
+        showBackButton={true}
+        handleClickBackButton={handleNavigateBack}
+      />
 
       {/* Buscar produto */}
       <div className='relative w-full mt-6 mb-6 px-4'>
