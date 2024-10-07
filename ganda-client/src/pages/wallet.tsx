@@ -55,7 +55,7 @@ export const Wallet = (): ReactElement => {
   };
 
   return (
-    <div className='flex flex-col min-h-screen bg-gray-800 px-4 py-6 text-white'>
+    <div className='flex flex-col min-h-screen bg-gray-800 px-4 py-8 text-white'>
       {/* Header */}
       <PageHeader title='Carteira' showBackButton={false} />
 
