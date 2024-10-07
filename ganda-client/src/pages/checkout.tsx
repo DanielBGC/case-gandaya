@@ -7,9 +7,7 @@ import { numberToCurrencyFormat } from '../helpers';
 
 import { IModalCheckout } from '../types/modalCheckout';
 
-import { CheckoutCard } from '../components/CheckoutCard';
-import { Modal } from '../components/Modal';
-import { MainButton } from '../components/MainButton';
+import { CheckoutCard, Modal, MainButton } from '../components';
 
 import { useUserStore } from '../store';
 import { useCreateCart, IEventReturn } from '../hooks/cart';
