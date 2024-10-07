@@ -4,7 +4,9 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { FaSearch } from 'react-icons/fa';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { ProductCard, MainButton } from '../components';
+import { ProductCard } from '../components/productCard';
+import { MainButton } from '../components/mainButton';
+
 import { numberToCurrencyFormat } from '../helpers';
 import { IProduct } from '../types/product';
 
