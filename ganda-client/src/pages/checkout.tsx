@@ -9,7 +9,7 @@ import { IModalCheckout } from '../types/modalCheckout';
 
 import { CheckoutCard } from '../components/checkoutCard';
 import { Modal } from '../components/modal';
-import { MainButton } from '../components/mainButton';
+import { MainButton } from '../components/button';
 
 import { useUserStore } from '../store';
 import { useCreateCart, IEventReturn } from '../hooks/cart';

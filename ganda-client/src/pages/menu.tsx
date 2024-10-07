@@ -5,7 +5,7 @@ import { FaSearch } from 'react-icons/fa';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { ProductCard } from '../components/productCard';
-import { MainButton } from '../components/mainButton';
+import { MainButton } from '../components/button';
 
 import { numberToCurrencyFormat } from '../helpers';
 import { IProduct } from '../types/product';

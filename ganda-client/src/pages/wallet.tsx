@@ -3,7 +3,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { MainButton } from '../components/mainButton';
+import { MainButton } from '../components/button';
 import { Order } from '../components/order';
 import { IOrder } from '../types/order';
 

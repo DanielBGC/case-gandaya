@@ -1,6 +1,6 @@
 import { CheckoutCard } from './checkoutCard';
 import { ProductCard } from './productCard';
-import { MainButton } from './mainButton';
+import { MainButton } from './button';
 import { Modal } from './modal';
 import { Order } from './order';
 
