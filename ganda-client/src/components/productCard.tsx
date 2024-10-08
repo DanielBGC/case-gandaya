@@ -1,4 +1,5 @@
 import { useEffect, useState, ReactElement } from 'react';
+import { motion } from 'framer-motion';
 
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
@@ -55,7 +56,11 @@ export const ProductCard = ({
 
   return (
     <div key={id} className='mb-8 flex flex-col gap-3 items-center'>
-      <div className='relative'>
+      <motion.div
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 10 }}
+        className='relative'
+      >
         <img
           onClick={toggleQuantitySelector}
           src={image}
@@ -92,7 +97,7 @@ export const ProductCard = ({
             )}
           </div>
         )}
-      </div>
+      </motion.div>
 
       <div className='flex flex-col self-start ml-4'>
         <span className='text-xs font-bold'>{name}</span>
