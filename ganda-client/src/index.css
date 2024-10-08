@@ -106,7 +106,7 @@ span {
 
 /* Para fixar largura do dispositivo */
 #root {
-  height: 100vh;
+  height: 100svh;
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -90,7 +90,7 @@ export const Menu = (): ReactElement => {
   }, [purchasedItems, products]);
 
   return (
-    <div className='flex flex-col min-h-screen bg-gray-800 pt-4 text-white'>
+    <div className='flex flex-col min-h-screen bg-gray-800 pt-10 text-white'>
       {/* Header */}
       <PageHeader
         title='Cardápio'
@@ -137,7 +137,7 @@ export const Menu = (): ReactElement => {
       </div>
 
       {/* Valor total da compra */}
-      <div className='mt-auto w-full h-24 py-4 bg-slate-900 flex items-center'>
+      <div className='mt-auto w-full h-24 pt-4 pb-10 bg-slate-900 flex items-center'>
         <div className='flex justify-between items-center w-full px-5'>
           <div className='flex flex-col'>
             <span className='font-thin text-sm text-[#A2A2A2]'>
