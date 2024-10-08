@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ganda-case-db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: ganda_case_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data-ganda-case:/var/lib/mysql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/1.sql
+    networks:
+      - my-network
+
+volumes:
+  mysql-data-ganda-case:
+
+networks:
+  my-network:
